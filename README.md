@@ -1,6 +1,6 @@
 # Project Name
 
--JobBoard
+**JobBoard**
 
 ## Overview
 
