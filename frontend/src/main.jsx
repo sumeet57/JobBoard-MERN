@@ -20,6 +20,7 @@ import Recruiter from "./pages/recruiter.jsx";
 import Signup_User from "./pages/users/Signup_User.jsx";
 import Signin_User from "./pages/users/Signin_User.jsx";
 import Profile_User from "./pages/users/Profile_User.jsx";
+import Logout from "./components/Logout.jsx";
 
 //recruiter
 import Signup_Recruiter from "./pages/recruiter/Signup_Recruiter.jsx";
@@ -27,7 +28,7 @@ import Signin_Recruiter from "./pages/recruiter/Signin_Recruiter.jsx";
 import Profile_Recruiter from "./pages/recruiter/Profile_Recruiter.jsx";
 import Dashboard_Recruiter from "./pages/recruiter/Dashboard_Recruiter.jsx";
 import Create_Job from "./pages/recruiter/Create_Job.jsx";
-import View_Job from "./pages/recruiter/View_Job.jsx";
+import View_Job from "./pages/View_Job.jsx";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
             path: "profile",
             element: <Profile_User />,
           },
+          {
+            path: "logout",
+            element: <Logout />,
+          },
         ],
       },
       {
@@ -75,8 +80,18 @@ const router = createBrowserRouter([
             element: <Profile_Recruiter />,
           },
           {
+            path: "logout",
+            element: <Logout />,
+          },
+          {
             path: "dashboard",
             element: <Dashboard_Recruiter />,
+            children: [
+              {
+                path: "job/:id",
+                element: <View_Job />,
+              },
+            ],
           },
           {
             path: "createjob",

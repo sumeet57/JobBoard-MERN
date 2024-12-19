@@ -1,6 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Signin_Recruiter = () => {
+  const pathname = useLocation().pathname;
+  const navigate = useNavigate();
+
+  if (pathname === "/recruiter/signin") {
+    useEffect(() => {
+      const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("Rtoken="));
+      if (token) {
+        navigate("/");
+      }
+    }, []);
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch("http://localhost:5000/api/recruiters/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+
+      if (res.status === 200) {
+        document.querySelector(".message").innerHTML = data.message;
+        //removing all th cookies and localstorage, sessionstorage
+        document.cookie =
+          "Rtoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie =
+          "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        localStorage.removeItem("userid");
+
+        localStorage.removeItem("recruiterid");
+        sessionStorage.removeItem("profile");
+
+        //setting the new cookies and localstorage
+
+        document.cookie = `Rtoken=${data.token}; path=/;`;
+        localStorage.setItem("recruiterid", data.recruiterid);
+        navigate("/");
+      } else {
+        document.querySelector(".message").innerHTML = data.error;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,7 +64,7 @@ const Signin_Recruiter = () => {
           className="w-[500px] h-fit p-2 bg-[var(--box)] flex flex-col justify-center items-center rounded-2xl"
         >
           <input
-            className="w-full px-2 py-4 bg-transparent text-white outline-none border-2 rounded-2xl border-[var(--sec)] m-2"
+            className="w-full px-2 py-4 bg-transparent text-black outline-none border-2 rounded-2xl border-[var(--sec)] m-2"
             type="email"
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -21,14 +73,19 @@ const Signin_Recruiter = () => {
           <br />
 
           <input
-            className="w-full px-2 py-4 bg-transparent text-white outline-none border-2 rounded-2xl border-[var(--sec)] m-2"
+            className="w-full px-2 py-4 bg-transparent text-black outline-none border-2 rounded-2xl border-[var(--sec)] m-2"
             type="password"
             onChange={(e) => setPassword(e.target.value)}
             required
             placeholder="Enter Your Password"
           />
 
-          <button className="w-fit px-6 py-3 rounded-3xl bg-[var(--sec)] text-black mt-5">
+          <p className="message text-red-500"></p>
+
+          <button
+            onClick={handleSubmit}
+            className="w-fit px-6 py-3 rounded-3xl bg-[var(--sec)] text-black mt-5"
+          >
             Sign In
           </button>
         </form>

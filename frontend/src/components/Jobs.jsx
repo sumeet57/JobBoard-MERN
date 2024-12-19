@@ -1,72 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Jobs = () => {
-  const [data, setData] = useState([
-    {
-      title: "Software Engineer",
-      company: "Google",
-      location: "Mountain View, CA",
-      date: "1 day ago",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc",
-      skill: ["React", "Node", "Express", "MongoDB"],
-    },
-    {
-      title: "Software Engineer",
-      company: "Google",
-      location: "Mountain View, CA",
-      date: "1 day ago",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc",
-      skill: ["React", "Node", "Express", "MongoDB"],
-    },
-    {
-      title: "Software Engineer",
-      company: "Google",
-      location: "Mountain View, CA",
-      date: "1 day ago",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc",
-      skill: ["React", "Node", "Express", "MongoDB"],
-    },
-    {
-      title: "Software Engineer",
-      company: "Google",
-      location: "Mountain View, CA",
-      date: "1 day ago",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc",
-      skill: ["React", "Node", "Express", "MongoDB"],
-    },
-    {
-      title: "Software Engineer",
-      company: "Google",
-      location: "Mountain View, CA",
-      date: "1 day ago",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc",
-      skill: ["React", "Node", "Express", "MongoDB"],
-    },
-  ]);
+  const navigate = useNavigate();
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/jobs/all", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await res.json();
+        if (res.status === 200) {
+          setData(data.jobs);
+        } else {
+          console.log(data.error);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchJobs();
+  }, []);
+
+  console.log(data);
 
   return (
     <>
       <div className="content w-full h-screen text-black">
         <div className="cont flex flex-col gap-2 py-4">
-          {data.map((data) => (
-            <div key={data} className="bg-[var(--box)] m-2">
-              <h1>{data.title}</h1>
-              <div>
-                <p>{data.company}</p>
-                <p>{data.location}</p>
+          {Array.isArray(data) &&
+            data.map((job) => (
+              <div
+                onClick={() => navigate(`/job/${job._id}`)}
+                key={job.id}
+                className="job bg-[var(--box)] p-2 flex flex-col gap-2"
+              >
+                <h1 className="text-[1.5vw]">{job.title}</h1>
+                <p className="text-[1vw]">
+                  {job.city}, {job.country}
+                </p>
+                <p className="text-[1vw]">{job.salary}</p>
               </div>
-              <div>
-                {data.skill.map((skill) => (
-                  <span key={skill}> {skill} </span>
-                ))}
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     </>

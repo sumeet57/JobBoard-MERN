@@ -1,5 +1,6 @@
 //user import
 import Recruiter from "../models/recruiter.model.js";
+import Job from "../models/job.model.js";
 
 export const signup = async (req, res) => {
   const { name, email, phone, password } = req.body;
@@ -35,9 +36,13 @@ export const signup = async (req, res) => {
 
     await recruiter.save();
 
+    const recruiterid = recruiter._id;
+
     const token = recruiter.generateAuthToken();
 
-    res.status(201).json({ token });
+    res
+      .status(200)
+      .json({ token, recruiterid, message: "Recruiter signup successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -69,11 +74,33 @@ export const signin = async (req, res) => {
     return res.status(400).json({ error: "Invalid credentials" });
   }
 
+  const recruiterid = recruiter._id;
+
   const token = recruiter.generateAuthToken();
 
-  res.status(200).json({ token });
+  res
+    .status(200)
+    .json({ token, recruiterid, message: "Recruiter signin successfully" });
 };
 
 export const logout = async (req, res) => {
   res.status(200).json({ message: "Recruiter logout" });
+};
+
+//job posted by recruiter
+
+export const getPostedJobs = async (req, res) => {
+  const { recruiterid } = req.body;
+
+  try {
+    const jobs = await Job.find({ recruiter: recruiterid });
+    if (!jobs) {
+      return res
+        .status(404)
+        .json({ error: "No jobs found for this recruiter" });
+    }
+    res.status(200).json(jobs);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };

@@ -25,10 +25,6 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Job",
   },
-  favorite: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Job",
-  },
   password: {
     type: String,
     required: true,

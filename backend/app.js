@@ -6,7 +6,7 @@ import cors from "cors";
 import userRouter from "./router/user.router.js";
 import recruiterRouter from "./router/recruiter.router.js";
 // import jobRouter from "./router/job.router.js";
-import { getJobs } from "./controllers/job.controller.js";
+import jobRouter from "./router/job.router.js";
 
 const app = express();
 app.use(cors());
@@ -18,12 +18,12 @@ app.get("/", (req, res) => {
 });
 
 //user route
-app.use("/users", userRouter);
+app.use("/api/users", userRouter);
 
 //recruiter route
-app.use("/recruiters", recruiterRouter);
+app.use("/api/recruiters", recruiterRouter);
 
 // job route
-app.use("/jobs", getJobs);
+app.use("/api/jobs", jobRouter);
 
 export default app;
