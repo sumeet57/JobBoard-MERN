@@ -81,5 +81,3 @@ This project consists of both frontend and backend components. The frontend is b
 
 1. Ensure both frontend and backend servers are running.
 2. Access the application via the frontend URL `http://localhost:3000`.
-
---end
