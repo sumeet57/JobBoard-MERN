@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 const Dashboard_Recruiter = () => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
+  const path = useLocation().pathname;
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -32,13 +33,14 @@ const Dashboard_Recruiter = () => {
   }, []);
   return (
     <>
-      <div className="w-full h-screen pt-24">
+      {path === "/recruiter/dashboard" ? (
+        <div className="w-full h-screen pt-24">
         <p className="message text-red-500"></p>
         <div className="cont flex flex-col gap-2 py-4">
           {Array.isArray(data) &&
             data.map((job) => (
               <div
-                onClick={() => navigate(`/job/${job._id}`)}
+                onClick={() => navigate(`/recruiter/dashboard/${job._id}`)}
                 key={job.id}
                 className="job bg-[var(--box)] p-2 flex flex-col gap-2"
               >
@@ -51,6 +53,7 @@ const Dashboard_Recruiter = () => {
             ))}
         </div>
       </div>
+      ) : (<Outlet />)}
     </>
   );
 };

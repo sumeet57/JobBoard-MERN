@@ -2,16 +2,26 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 const Logout = () => {
   const navigate = useNavigate();
-  const logout = () => {
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    localStorage.removeItem("userid");
-    sessionStorage.removeItem("profile");
-
-    //for recruiter
-    document.cookie = "Rtoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    localStorage.removeItem("recruiterid");
-
-    navigate("/");
+  const logout = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/logout", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (res.status === 200) {
+        localStorage.clear();
+        sessionStorage.clear();
+        navigate("/");
+      } else {
+        console.log(data.error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

@@ -17,18 +17,55 @@ const userSchema = new mongoose.Schema({
   },
   city: {
     type: String,
+    default: "",
   },
   country: {
     type: String,
+    default: "",
   },
-  appliedJobs: {
+  appliedJobs: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Job",
-  },
+  }],
   password: {
     type: String,
     required: true,
   },
+  // application info
+  summary: {
+    type: String,
+    default: "",
+  },
+  experience: {
+    type: String,
+    default: "",
+  },
+  skills: {
+    type: [String],
+    default: [""],
+  },
+  education: {
+    type: [String],
+    default: [""],
+  },
+  role : {
+    type: String,
+    default: "",
+  },
+  // social media
+
+  linkedin: {
+    type: String,
+    default: "",
+  },
+  github: {
+    type: String,
+    default: "",
+  },
+  portfolio: {
+    type: String,
+    default: "",
+  }
 });
 
 userSchema.methods.generateAuthToken = function () {

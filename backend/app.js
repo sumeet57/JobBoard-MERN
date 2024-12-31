@@ -9,7 +9,10 @@ import recruiterRouter from "./router/recruiter.router.js";
 import jobRouter from "./router/job.router.js";
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -25,5 +28,14 @@ app.use("/api/recruiters", recruiterRouter);
 
 // job route
 app.use("/api/jobs", jobRouter);
+
+//logout
+app.get("/logout", (req, res) => {
+  
+    res.clearCookie("token");
+    res.clearCookie("Rtoken");
+    res.status(200).json({ message: "User logout" });
+  
+});
 
 export default app;

@@ -12,7 +12,6 @@ export const createJob = async (req, res) => {
     description,
     skills,
     education,
-    experience,
     salary,
     publisher,
   } = req.body;
@@ -26,16 +25,11 @@ export const createJob = async (req, res) => {
     !description ||
     !skills ||
     !education ||
-    !experience ||
     !salary ||
     !publisher
   ) {
     return res.status(400).json({ message: "All fields are required" });
-  } else if (experience < 0) {
-    return res
-      .status(400)
-      .json({ message: "Experience must be a positive number" });
-  } else if (salary < 0) {
+  }else if (salary < 0) {
     return res
       .status(400)
       .json({ message: "Salary must be a positive number" });
@@ -82,7 +76,6 @@ export const createJob = async (req, res) => {
       description,
       skills,
       education,
-      experience,
       salary,
       publisher: Recruiter._id,
     });
@@ -224,8 +217,47 @@ export const deleteJob = async (req, res) => {
   }
 
   try {
-    const job = await Job.findByIdAndDelete(id);
+    const res = await Job.findByIdAndDelete(id);
     return res.status(200).json({ message: "Job deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+//apply job
+
+export const applyJob = async (req, res) => {
+  const { jobid, userid } = req.body;
+
+  //validation
+  if (!jobid || !userid) {
+    return res.status(400).json({ message: "All fields are required" });
+  } else if (jobid.length != 24) {
+    return res.status(400).json({ message: "Invalid job id" });
+  } else if (userid.length != 24) {
+    return res.status(400).json({ message: "Invalid user id" });
+  }
+
+  try {
+    const job = await Job.findById(jobid);
+    if (!job) {
+      return res.status(400).json({ message: "Job not found" });
+    }
+
+    const user = await User.findById(userid);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    const applied = job.applicants.includes(userid);
+    if (applied) {
+      return res.status(400).json({ message: "Already applied" });
+    }
+
+    job.applicants.push(userid);
+    await job.save();
+
+    return res.status(200).json({ message: "Applied successfully" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

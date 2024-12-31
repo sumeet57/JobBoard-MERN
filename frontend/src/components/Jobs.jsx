@@ -29,7 +29,7 @@ const Jobs = () => {
     fetchJobs();
   }, []);
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <>
@@ -38,8 +38,8 @@ const Jobs = () => {
           {Array.isArray(data) &&
             data.map((job) => (
               <div
+                key={job._id}
                 onClick={() => navigate(`/job/${job._id}`)}
-                key={job.id}
                 className="job bg-[var(--box)] p-2 flex flex-col gap-2"
               >
                 <h1 className="text-[1.5vw]">{job.title}</h1>

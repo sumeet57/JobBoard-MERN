@@ -16,6 +16,7 @@ import Home from "./pages/Home.jsx";
 
 import User from "./pages/user.jsx";
 import Recruiter from "./pages/recruiter.jsx";
+import ProtectedRoute from "./utils/ProtectedRoute.jsx";
 //user
 import Signup_User from "./pages/users/Signup_User.jsx";
 import Signin_User from "./pages/users/Signin_User.jsx";
@@ -29,6 +30,9 @@ import Profile_Recruiter from "./pages/recruiter/Profile_Recruiter.jsx";
 import Dashboard_Recruiter from "./pages/recruiter/Dashboard_Recruiter.jsx";
 import Create_Job from "./pages/recruiter/Create_Job.jsx";
 import View_Job from "./pages/View_Job.jsx";
+import UserApplicationUpdate from "./components/UserApplicationUpdate.jsx";
+import UserProfileUpdate from "./components/UserProfileUpdate.jsx";
+import RecruiterJobManage from "./components/RecruiterJobManage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -54,7 +58,17 @@ const router = createBrowserRouter([
           },
           {
             path: "profile",
-            element: <Profile_User />,
+            element: <ProtectedRoute> <Profile_User /> </ProtectedRoute>,
+            children: [
+              {
+                path: "application",
+                element: <ProtectedRoute> <UserApplicationUpdate /> </ProtectedRoute>,
+              },
+              {
+                path: "update",
+                element: <ProtectedRoute> <UserProfileUpdate /> </ProtectedRoute>
+              }
+            ]
           },
           {
             path: "logout",
@@ -88,8 +102,8 @@ const router = createBrowserRouter([
             element: <Dashboard_Recruiter />,
             children: [
               {
-                path: "job/:id",
-                element: <View_Job />,
+                path: ":id",
+                element: <RecruiterJobManage />,
               },
             ],
           },

@@ -36,7 +36,7 @@ const Aside = () => {
             },
           ].map((item) => (
             <div
-              key={item}
+              key={item.name}
               className="navlink w-full h-[50px] flex justify-center items-center capitalize text-[18px] mt-4"
             >
               <p>{item.name}</p>

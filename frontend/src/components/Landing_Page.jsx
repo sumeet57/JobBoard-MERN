@@ -5,7 +5,7 @@ import Header from "./Header.jsx";
 
 const Landing_Page = () => {
   const pathname = useLocation().pathname;
-  console.log(pathname);
+  // console.log(pathname);
   return (
     <>
       <Header />

@@ -8,9 +8,9 @@ const Header = () => {
           <h1>jobboard</h1>
         </div>
         <div className="navlink flex justify-center items-center gap-2">
-          <a href="/home">Home</a>
-          <a href="/signup">Sign Up</a>
-          <a href="/signin">Sign In</a>
+          <a href="/user/profile">profile</a>
+          <a href="/user/signup">Sign Up</a>
+          <a href="/user/signin">Sign In</a>
         </div>
       </nav>
     </>

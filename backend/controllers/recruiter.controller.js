@@ -40,7 +40,8 @@ export const signup = async (req, res) => {
 
     const token = recruiter.generateAuthToken();
 
-    res
+
+    res.cookie("Rtoken", token)
       .status(200)
       .json({ token, recruiterid, message: "Recruiter signup successfully" });
   } catch (error) {
@@ -78,12 +79,13 @@ export const signin = async (req, res) => {
 
   const token = recruiter.generateAuthToken();
 
-  res
+  res.cookie("Rtoken", token)
     .status(200)
     .json({ token, recruiterid, message: "Recruiter signin successfully" });
 };
 
 export const logout = async (req, res) => {
+  res.clearCookie("Rtoken");
   res.status(200).json({ message: "Recruiter logout" });
 };
 

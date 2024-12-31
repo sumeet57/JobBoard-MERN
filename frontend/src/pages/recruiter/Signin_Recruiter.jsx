@@ -7,6 +7,7 @@ const Signin_Recruiter = () => {
 
   if (pathname === "/recruiter/signin") {
     useEffect(() => {
+      console.log(document.cookie);
       const token = document.cookie
         .split("; ")
         .find((row) => row.startsWith("Rtoken="));
@@ -24,6 +25,8 @@ const Signin_Recruiter = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include", //for accepting the cookies
+        
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
@@ -31,18 +34,12 @@ const Signin_Recruiter = () => {
       if (res.status === 200) {
         document.querySelector(".message").innerHTML = data.message;
         //removing all th cookies and localstorage, sessionstorage
-        document.cookie =
-          "Rtoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        document.cookie =
-          "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        localStorage.removeItem("userid");
-
-        localStorage.removeItem("recruiterid");
-        sessionStorage.removeItem("profile");
+        
+        localStorage.clear();
+        sessionStorage.clear();
 
         //setting the new cookies and localstorage
 
-        document.cookie = `Rtoken=${data.token}; path=/;`;
         localStorage.setItem("recruiterid", data.recruiterid);
         navigate("/");
       } else {

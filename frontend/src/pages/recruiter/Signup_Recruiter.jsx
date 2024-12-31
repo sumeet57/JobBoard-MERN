@@ -4,16 +4,21 @@ import { useNavigate, useLocation } from "react-router-dom";
 const Signup_Recruiter = () => {
   const pathname = useLocation().pathname;
   const navigate = useNavigate();
-  if (pathname === "/recruiter/signup") {
-    useEffect(() => {
-      const token = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("Rtoken="));
-      if (token) {
-        navigate("/");
-      }
-    }, []);
-  }
+    const checkfn = () => {
+      useEffect(() => {
+        if (pathname === "/recruiter/signup") {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith('token=')) {
+              console.log(cookie + " found");
+              navigate("/");
+            }
+          }
+        }
+      }, [pathname, navigate]);
+    }
+    checkfn();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,24 +28,19 @@ const Signup_Recruiter = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include", //for accepting the cookies
         body: JSON.stringify({ name, email, phone, password }),
       });
       const data = await res.json();
       if (res.status === 200) {
         document.querySelector(".message").innerHTML = data.message;
         //removing all th cookies and localstorage, sessionstorage
-        document.cookie =
-          "Rtoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        document.cookie =
-          "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        localStorage.removeItem("userid");
 
-        localStorage.removeItem("recruiterid");
-        sessionStorage.removeItem("profile");
+        localStorage.clear();
+        sessionStorage.clear();
 
         //setting the new cookies and localstorage
 
-        document.cookie = `Rtoken=${data.token}; path=/;`;
         localStorage.setItem("recruiterid", data.recruiterid);
         navigate("/");
       } else {
